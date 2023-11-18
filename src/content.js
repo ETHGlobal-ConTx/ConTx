@@ -59,6 +59,7 @@ function addCollapsibleDivs() {
     const collapsibleCol = document.createElement("td");
     collapsibleCol.colSpan = 10;
     collapsibleCol.id = "collapsible-row-" + index; // Customize as needed
+    collapsibleCol.classList.add("collapsible-row"); // Customize as needed
     // collapsibleCol.style.backgroundColor = "#f9f9f9"; // Styling example
     // collapsibleCol.style.border = "1px solid #ddd";
     // collapsibleCol.style.marginTop = "5px";
