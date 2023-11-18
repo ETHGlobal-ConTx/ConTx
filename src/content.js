@@ -201,12 +201,13 @@ function addCollapsibleDivs() {
     });
 
     saveButton.addEventListener("click", function () {
+      saveButton.textContent = "Saving...";
       const note = document.querySelector("#note").value;
       const category = document.querySelector("#categorySelect").value;
       const txHash = row.querySelector("td:nth-child(3)").textContent;
-      const fromAdd = row.querySelector("td:nth-child(8)").textContent;
-      const txType = row.querySelector("td:nth-child(9)").textContent;
-      const toAdd = row.querySelector("td:nth-child(10)").textContent;
+      const fromAdd = row.querySelector("td:nth-child(7)").textContent;
+      const txType = row.querySelector("td:nth-child(8)").textContent;
+      const toAdd = row.querySelector("td:nth-child(9)").textContent;
       console.log("note", note);
       console.log("category", category);
       console.log("txHash", txHash);
@@ -230,7 +231,11 @@ function addCollapsibleDivs() {
       })
         .then((response) => response.json())
         .then((data) => console.log(data))
-        .catch((error) => console.error("Error:", error));
+        .catch((error) => console.error("Error:", error))
+        .finally(() => {
+          saveButton.textContent = "Save";
+          collapsibleRow.style.display = "none";
+        });
     });
   });
 }
