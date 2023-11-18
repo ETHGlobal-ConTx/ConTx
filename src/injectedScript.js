@@ -100,6 +100,7 @@ window.addEventListener("message", async (event) => {
   }
 });
 
+// Listen for connect requests
 setInterval(() => {
   const account = getAccount();
   if (connectedAccount) {

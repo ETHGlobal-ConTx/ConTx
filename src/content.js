@@ -255,6 +255,7 @@ function initialListeners() {
     switch (event.data.action) {
       case "SET_ACCOUNT":
         account = event.data.account;
+        signature = null;
         break;
       case "SET_SIGNATURE":
         signature = event.data.signature;
