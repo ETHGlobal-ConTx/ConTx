@@ -179,32 +179,34 @@ async function addCollapsibleDivs() {
     // Insert the div after the row
     row.parentNode.insertBefore(collapsibleRow, row.nextSibling);
 
-    const actionRow = document.createElement("div");
-    actionRow.style.display = "flex";
-    actionRow.style.justifyContent = "flex-end";
-    actionRow.style.alignItems = "center";
-    actionRow.style.marginTop = "16px";
-    wrapper.appendChild(actionRow);
+    if (isOwner) {
+      const actionRow = document.createElement("div");
+      actionRow.style.display = "flex";
+      actionRow.style.justifyContent = "flex-end";
+      actionRow.style.alignItems = "center";
+      actionRow.style.marginTop = "16px";
+      wrapper.appendChild(actionRow);
 
-    const cancelButton = document.createElement("button");
-    cancelButton.textContent = "Cancel";
-    cancelButton.style.marginRight = "8px";
-    cancelButton.style.padding = "8px 16px";
-    cancelButton.style.border = "none";
-    cancelButton.style.borderRadius = "4px";
-    cancelButton.style.backgroundColor = "#ddd";
-    cancelButton.style.cursor = "pointer";
-    actionRow.appendChild(cancelButton);
+      const cancelButton = document.createElement("button");
+      cancelButton.textContent = "Cancel";
+      cancelButton.style.marginRight = "8px";
+      cancelButton.style.padding = "8px 16px";
+      cancelButton.style.border = "none";
+      cancelButton.style.borderRadius = "4px";
+      cancelButton.style.backgroundColor = "#ddd";
+      cancelButton.style.cursor = "pointer";
+      actionRow.appendChild(cancelButton);
 
-    const saveButton = document.createElement("button");
-    saveButton.textContent = "Save";
-    saveButton.style.padding = "8px 16px";
-    saveButton.style.border = "none";
-    saveButton.style.borderRadius = "4px";
-    saveButton.style.backgroundColor = "#007bff";
-    saveButton.style.color = "#fff";
-    saveButton.style.cursor = "pointer";
-    actionRow.appendChild(saveButton);
+      const saveButton = document.createElement("button");
+      saveButton.textContent = "Save";
+      saveButton.style.padding = "8px 16px";
+      saveButton.style.border = "none";
+      saveButton.style.borderRadius = "4px";
+      saveButton.style.backgroundColor = "#007bff";
+      saveButton.style.color = "#fff";
+      saveButton.style.cursor = "pointer";
+      actionRow.appendChild(saveButton);
+    }
 
     // Event listener to toggle the visibility of the div
     toggleButton.addEventListener("click", function () {
@@ -217,14 +219,15 @@ async function addCollapsibleDivs() {
     });
 
     saveButton.addEventListener("click", async function () {
+      if (!signature) {
+        return;
+      }
       saveButton.textContent = "Saving...";
       saveButton.disabled = true;
       const _note = note.value;
       const _category = categorySelect.value;
       const txHash = row.querySelector("td:nth-child(2)").textContent;
       const fromAdd = row.querySelector("td:nth-child(7)").textContent;
-      const txType = row.querySelector("td:nth-child(8)").textContent;
-      const toAdd = row.querySelector("td:nth-child(9)").textContent;
       try {
         const res = await fetch(
           "https://dev.serve.giveth.io/ethglobal_hackathon/metadata",
