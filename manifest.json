@@ -18,7 +18,8 @@
       "resources": [
         "dist/injectedScript.bundle.js",
         "dist/vendors-node_modules_events_events_js.bundle.js",
-        "dist/vendors-node_modules_walletconnect_ethereum-provider_dist_index_es_js.bundle.js"
+        "dist/vendors-node_modules_walletconnect_ethereum-provider_dist_index_es_js.bundle.js",
+        "/images/right.svg"
       ],
       "matches": ["https://goerli.basescan.org/*"]
     }
