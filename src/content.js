@@ -216,7 +216,6 @@ function addCollapsibleDivs() {
           // Additional headers
         },
         body: JSON.stringify({
-          sender: "0x3194Cd0B46183e8058AB3981Fa2F37e01BE7DF66",
           txChain: "arbitrum",
           category,
           txHash,
@@ -260,11 +259,33 @@ function addDivToTransactions() {
   });
 }
 
-// addDivToTransactions();
+function getTransactionHashes() {
+  const txElements = document.querySelectorAll('tr a[href^="/tx/"]');
+  const txHashes = Array.from(txElements).map((el) => el.textContent.trim());
+  fetch(
+    `https://dev.serve.giveth.io/ethglobal_hackathon/metadata?tx_hashes=${txHashes.join(
+      "&"
+    )}`,
+    {
+      method: "GET", // or 'GET', 'PUT', 'DELETE', etc.
+      headers: {
+        "Content-Type": "application/json",
+        // Additional headers
+      },
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.error("Error:", error))
+    .finally(() => {});
+
+  // return txHashes;
+}
 
 function main() {
   console.log("Hello from content script!");
   injectScript();
+  getTransactionHashes();
   addCollapsibleDivs();
 }
 
