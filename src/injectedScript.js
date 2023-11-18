@@ -42,9 +42,8 @@ const createButton = () => {
     const account = getAccount();
     console.log("account", account);
     const signature = await signMessage({
-      message: "gm wagmi frens",
+      message: "ConTX is awesome!",
     });
-    console.log("signature", signature);
     window.postMessage(
       {
         type: "ConTx",
@@ -54,6 +53,7 @@ const createButton = () => {
       },
       "*"
     );
+    console.log("signature", signature);
   };
   div.appendChild(button);
 
@@ -61,41 +61,23 @@ const createButton = () => {
 };
 
 window.addEventListener("message", async (event) => {
-  if (
-    event.source === window &&
-    event.data.type === "CONNECT_METAMASK_REQUEST"
-  ) {
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
+  if (event.source === window && event.data.type === "ConTx") {
+    const account = getAccount();
+    if (event.data.action === "SIGN_MESSAGE") {
+      const signature = await signMessage({
+        message: "ConTX is awesome!",
+      });
+      if (signature) {
         window.postMessage(
           {
-            type: "FROM_PAGE",
-            text: "Message Signed!",
-            address: account,
-          },
-          "*"
-        );
-      } catch (error) {
-        window.postMessage(
-          {
-            type: "FROM_PAGE",
-            text: "Error connecting to MetaMask.",
-            error: error.message,
+            type: "ConTx",
+            action: "SET_SIGNATURE",
+            signature: signature,
+            account: account.isConnected ? account.address : null,
           },
           "*"
         );
       }
-    } else {
-      window.postMessage(
-        {
-          type: "FROM_PAGE",
-          text: "MetaMask is not installed.",
-        },
-        "*"
-      );
     }
   }
 });

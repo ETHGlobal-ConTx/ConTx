@@ -53,7 +53,7 @@ async function addCollapsibleDivs() {
 
     const txHash = row.querySelector("td:nth-child(2)").textContent;
     const fromAdd = row.querySelector("td:nth-child(7)").textContent;
-    const isOwner = fromAdd.toLowerCase() === account.toLowerCase();
+    const isOwner = fromAdd?.toLowerCase() === account?.toLowerCase();
 
     // Create a button to toggle the div visibility
     const toggleButton = document.createElement("div");
@@ -64,6 +64,11 @@ async function addCollapsibleDivs() {
     // let img = document.createElement("img");
     // img.src = chrome.runtime.getURL("images/right.svg");
     // toggleButton.appendChild(img);
+    // Event listener to toggle the visibility of the div
+    toggleButton.addEventListener("click", function () {
+      collapsibleRow.style.display =
+        collapsibleRow.style.display === "none" ? "" : "none";
+    });
 
     // Insert the button in the first cell of the row
     const firstCell = row.cells[0];
@@ -206,55 +211,56 @@ async function addCollapsibleDivs() {
       saveButton.style.color = "#fff";
       saveButton.style.cursor = "pointer";
       actionRow.appendChild(saveButton);
-    }
 
-    // Event listener to toggle the visibility of the div
-    toggleButton.addEventListener("click", function () {
-      collapsibleRow.style.display =
-        collapsibleRow.style.display === "none" ? "" : "none";
-    });
-
-    cancelButton.addEventListener("click", function () {
-      collapsibleRow.style.display = "none";
-    });
-
-    saveButton.addEventListener("click", async function () {
-      if (!signature) {
-        return;
-      }
-      saveButton.textContent = "Saving...";
-      saveButton.disabled = true;
-      const _note = note.value;
-      const _category = categorySelect.value;
-      const txHash = row.querySelector("td:nth-child(2)").textContent;
-      const fromAdd = row.querySelector("td:nth-child(7)").textContent;
-      try {
-        const res = await fetch(
-          "https://dev.serve.giveth.io/ethglobal_hackathon/metadata",
-          {
-            method: "POST", // or 'GET', 'PUT', 'DELETE', etc.
-            headers: {
-              "Content-Type": "application/json",
-              // Additional headers
-            },
-            body: JSON.stringify({
-              txChain: "baseGoerli",
-              category: _category,
-              txHash,
-              description: _note,
-              sender: fromAdd,
-            }), // body data type must match "Content-Type" header
-          }
-        );
-        const data = await res.json();
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        saveButton.disabled = false;
-        saveButton.textContent = "Save";
+      cancelButton.addEventListener("click", function () {
         collapsibleRow.style.display = "none";
-      }
-    });
+      });
+
+      saveButton.addEventListener("click", async function () {
+        if (!signature) {
+          window.postMessage(
+            {
+              type: "ConTx",
+              action: "SIGN_MESSAGE",
+            },
+            "*"
+          );
+          return;
+        }
+        saveButton.textContent = "Saving...";
+        saveButton.disabled = true;
+        const _note = note.value;
+        const _category = categorySelect.value;
+        const txHash = row.querySelector("td:nth-child(2)").textContent;
+        const fromAdd = row.querySelector("td:nth-child(7)").textContent;
+        try {
+          const res = await fetch(
+            "https://dev.serve.giveth.io/ethglobal_hackathon/metadata",
+            {
+              method: "POST", // or 'GET', 'PUT', 'DELETE', etc.
+              headers: {
+                "Content-Type": "application/json",
+                // Additional headers
+              },
+              body: JSON.stringify({
+                txChain: "baseGoerli",
+                category: _category,
+                txHash,
+                description: _note,
+                sender: fromAdd,
+              }), // body data type must match "Content-Type" header
+            }
+          );
+          const data = await res.json();
+        } catch (error) {
+          console.error("Error:", error);
+        } finally {
+          saveButton.disabled = false;
+          saveButton.textContent = "Save";
+          collapsibleRow.style.display = "none";
+        }
+      });
+    }
   });
 }
 
@@ -271,7 +277,6 @@ async function initialListeners() {
       case "SET_SIGNATURE":
         signature = event.data.signature;
         account = event.data.account;
-        addCollapsibleDivs();
         break;
 
       default:
