@@ -42,6 +42,8 @@ async function addCollapsibleDivs() {
       return;
     }
 
+    const txHash = row.querySelector("td:nth-child(2)").textContent;
+
     // Create a button to toggle the div visibility
     const toggleButton = document.createElement("div");
     toggleButton.style.margin = "5px";
@@ -110,6 +112,7 @@ async function addCollapsibleDivs() {
     note.style.width = "100%";
     note.style.height = "100px";
     note.style.border = "none";
+    note.innerText = txInfo[txHash]?.description || "";
     noteWrapper.appendChild(note);
 
     const infoWrapper = document.createElement("div");
