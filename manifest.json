@@ -22,5 +22,10 @@
       ],
       "matches": ["https://goerli.basescan.org/*"]
     }
-  ]
+  ],
+  "icons": {
+    "16": "images/icon.svg",
+    "48": "images/icon.svg",
+    "128": "images/icon.svg"
+  }
 }
