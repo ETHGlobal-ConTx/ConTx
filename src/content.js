@@ -37,6 +37,9 @@ async function addCollapsibleDivs() {
   const elements = document.querySelectorAll(".collapsible-row");
   elements.forEach((element) => element.remove());
 
+  const toggles = document.querySelectorAll(".toggle-button");
+  toggles.forEach((element) => element.remove());
+
   // Select the table and its rows
   const table = document.querySelector("table"); // Adjust the selector as needed
   if (!table) return;
@@ -54,6 +57,7 @@ async function addCollapsibleDivs() {
 
     // Create a button to toggle the div visibility
     const toggleButton = document.createElement("div");
+    toggleButton.classList.add("toggle-button");
     toggleButton.style.margin = "5px";
     toggleButton.innerHTML = ">";
     // toggleButton.innerHTML = '<img src="images/right.svg" alt="Description">';
