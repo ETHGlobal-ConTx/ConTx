@@ -226,9 +226,7 @@ function addCollapsibleDivs() {
         }), // body data type must match "Content-Type" header
       })
         .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-        })
+        .then((data) => console.log(data))
         .catch((error) => console.error("Error:", error))
         .finally(() => {
           saveButton.disabled = false;
@@ -282,9 +280,17 @@ function getTransactionHashes() {
     }
   )
     .then((response) => response.json())
-    .then((data) => console.log(data))
+    .then((data) => {
+      console.log(data);
+      txInfo = data.reduce((acc, item) => {
+        acc[item.txHash] = item;
+        return acc;
+      }, {});
+    })
     .catch((error) => console.error("Error:", error))
-    .finally(() => {});
+    .finally(() => {
+      console.log("txInfo", txInfo);
+    });
 
   // return txHashes;
 }
