@@ -205,7 +205,7 @@ function addCollapsibleDivs() {
       saveButton.disabled = true;
       const note = document.querySelector("#note").value;
       const category = document.querySelector("#categorySelect").value;
-      const txHash = row.querySelector("td:nth-child(3)").textContent;
+      const txHash = row.querySelector("td:nth-child(2)").textContent;
       const fromAdd = row.querySelector("td:nth-child(7)").textContent;
       const txType = row.querySelector("td:nth-child(8)").textContent;
       const toAdd = row.querySelector("td:nth-child(9)").textContent;
@@ -237,31 +237,32 @@ function addCollapsibleDivs() {
 
 // Run the function to modify the table
 
-function addDivToTransactions() {
-  // Select all the transaction rows
-  var transactionRows = document.querySelectorAll("tbody>tr");
+// function addDivToTransactions() {
+//   // Select all the transaction rows
+//   var transactionRows = document.querySelectorAll("tbody>tr");
 
-  transactionRows.forEach(function (row) {
-    const cols = row.querySelectorAll("&>td");
-    console.log("cols", cols);
-    const txHash = cols[2].textContent;
-    const fromAdd = cols[7].textContent;
-    const txType = cols[8].textContent;
-    const toAdd = cols[9].textContent;
+//   transactionRows.forEach(function (row) {
+//     const cols = row.querySelectorAll("&>td");
+//     console.log("cols", cols);
+//     const txHash = cols[1].textContent;
+//     const fromAdd = cols[7].textContent;
+//     const txType = cols[8].textContent;
+//     const toAdd = cols[9].textContent;
 
-    // Create a new div element
-    var newDiv = document.createElement("tr");
-    newDiv.innerHTML = `<td colspan="11">transactionHash: ${txHash}<br />TX Type:${txType}<br />From:${fromAdd}<br />To:${toAdd}</td>`;
-    newDiv.style.backgroundColor = "#f0f0f0"; // Example styling
+//     // Create a new div element
+//     var newDiv = document.createElement("tr");
+//     newDiv.innerHTML = `<td colspan="11">transactionHash: ${txHash}<br />TX Type:${txType}<br />From:${fromAdd}<br />To:${toAdd}</td>`;
+//     newDiv.style.backgroundColor = "#f0f0f0"; // Example styling
 
-    // Insert the new div after the transaction row
-    row.parentNode.insertBefore(newDiv, row.nextSibling);
-  });
-}
+//     // Insert the new div after the transaction row
+//     row.parentNode.insertBefore(newDiv, row.nextSibling);
+//   });
+// }
 
 function getTransactionHashes() {
   const txElements = document.querySelectorAll('tr a[href^="/tx/"]');
   const txHashes = Array.from(txElements).map((el) => el.textContent.trim());
+  console.log("txHashes", txHashes);
   fetch(
     `https://dev.serve.giveth.io/ethglobal_hackathon/metadata?tx_hashes=${txHashes.join(
       "&"
