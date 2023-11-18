@@ -202,6 +202,7 @@ function addCollapsibleDivs() {
 
     saveButton.addEventListener("click", function () {
       saveButton.textContent = "Saving...";
+      saveButton.disabled = true;
       const note = document.querySelector("#note").value;
       const category = document.querySelector("#categorySelect").value;
       const txHash = row.querySelector("td:nth-child(3)").textContent;
@@ -227,6 +228,7 @@ function addCollapsibleDivs() {
         .then((data) => console.log(data))
         .catch((error) => console.error("Error:", error))
         .finally(() => {
+          saveButton.disabled = false;
           saveButton.textContent = "Save";
           collapsibleRow.style.display = "none";
         });
