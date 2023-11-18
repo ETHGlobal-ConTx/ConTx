@@ -33,6 +33,9 @@ function addColumnBeforeFirst() {
 // addColumnBeforeFirst();
 
 async function addCollapsibleDivs() {
+  const elements = document.querySelectorAll(".collapsible-row");
+  elements.forEach((element) => element.remove());
+
   // Select the table and its rows
   const table = document.querySelector("table"); // Adjust the selector as needed
   if (!table) return;
@@ -45,6 +48,8 @@ async function addCollapsibleDivs() {
     }
 
     const txHash = row.querySelector("td:nth-child(2)").textContent;
+    const fromAdd = row.querySelector("td:nth-child(7)").textContent;
+    const isOwner = fromAdd.toLowerCase() === account.toLowerCase();
 
     // Create a button to toggle the div visibility
     const toggleButton = document.createElement("div");
@@ -62,14 +67,11 @@ async function addCollapsibleDivs() {
     // Create a collapsible div
     const collapsibleRow = document.createElement("tr");
     collapsibleRow.style.display = "none"; // Start collapsed
+    collapsibleRow.classList.add("collapsible-row"); // Customize as needed
     const collapsibleCol = document.createElement("td");
     collapsibleCol.colSpan = 10;
-    collapsibleCol.id = "collapsible-row-" + index; // Customize as needed
-    collapsibleCol.classList.add("collapsible-row"); // Customize as needed
-    // collapsibleCol.style.backgroundColor = "#f9f9f9"; // Styling example
-    // collapsibleCol.style.border = "1px solid #ddd";
-    // collapsibleCol.style.marginTop = "5px";
-    // collapsibleCol.style.padding = "8px";
+    collapsibleCol.id = "collapsible-col-" + index; // Customize as needed
+    collapsibleCol.classList.add("collapsible-col"); // Customize as needed
     collapsibleRow.appendChild(collapsibleCol);
 
     const wrapper = document.createElement("div");
@@ -109,7 +111,7 @@ async function addCollapsibleDivs() {
     noteTitle.style.fontSize = "14px";
     noteWrapper.appendChild(noteTitle);
 
-    const note = document.createElement("textarea");
+    const note = document.createElement(isOwner ? "textarea" : "div");
     note.id = "note";
     note.style.width = "100%";
     note.style.height = "100px";
@@ -248,7 +250,7 @@ async function addCollapsibleDivs() {
   });
 }
 
-function initialListeners() {
+async function initialListeners() {
   window.addEventListener("message", async (event) => {
     if (event.data.type !== "ConTx") return;
     console.log("event", event.data);
@@ -256,10 +258,12 @@ function initialListeners() {
       case "SET_ACCOUNT":
         account = event.data.account;
         signature = null;
+        addCollapsibleDivs();
         break;
       case "SET_SIGNATURE":
         signature = event.data.signature;
         account = event.data.account;
+        addCollapsibleDivs();
         break;
 
       default:
