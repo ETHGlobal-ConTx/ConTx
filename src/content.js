@@ -260,7 +260,9 @@ function addCollapsibleDivs() {
 // }
 
 function getTransactionHashes() {
-  const txElements = document.querySelectorAll('tr a[href^="/tx/"]');
+  const txElements = document.querySelectorAll(
+    'tr>td:nth-child(2)>a[href^="/tx/"]'
+  );
   const txHashes = Array.from(txElements).map((el) => el.textContent.trim());
   console.log("txHashes", txHashes);
   fetch(
