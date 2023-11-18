@@ -208,12 +208,6 @@ function addCollapsibleDivs() {
       const fromAdd = row.querySelector("td:nth-child(7)").textContent;
       const txType = row.querySelector("td:nth-child(8)").textContent;
       const toAdd = row.querySelector("td:nth-child(9)").textContent;
-      console.log("note", note);
-      console.log("category", category);
-      console.log("txHash", txHash);
-      console.log("fromAdd", fromAdd);
-      console.log("txType", txType);
-      console.log("toAdd", toAdd);
       fetch("https://dev.serve.giveth.io/ethglobal_hackathon/metadata", {
         method: "POST", // or 'GET', 'PUT', 'DELETE', etc.
         headers: {
