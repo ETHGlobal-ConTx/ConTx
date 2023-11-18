@@ -59,11 +59,11 @@ async function addCollapsibleDivs() {
     const toggleButton = document.createElement("div");
     toggleButton.classList.add("toggle-button");
     toggleButton.style.margin = "5px";
-    toggleButton.innerHTML = ">";
-    // toggleButton.innerHTML = '<img src="images/right.svg" alt="Description">';
-    // let img = document.createElement("img");
-    // img.src = chrome.runtime.getURL("images/right.svg");
-    // toggleButton.appendChild(img);
+    toggleButton.style.cursor = "pointer";
+    // toggleButton.innerHTML = ">";
+    let img = document.createElement("img");
+    img.src = chrome.runtime.getURL("images/right.svg");
+    toggleButton.appendChild(img);
     // Event listener to toggle the visibility of the div
     toggleButton.addEventListener("click", function () {
       collapsibleRow.style.display =
