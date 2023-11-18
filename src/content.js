@@ -33,6 +33,7 @@ function addColumnBeforeFirst() {
 // addColumnBeforeFirst();
 
 async function addCollapsibleDivs() {
+  // Remove all existing collapsible divs
   const elements = document.querySelectorAll(".collapsible-row");
   elements.forEach((element) => element.remove());
 
