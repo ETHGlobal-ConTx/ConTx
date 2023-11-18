@@ -116,6 +116,14 @@ setInterval(() => {
       connectedAccount = account;
     }
   } else {
+    window.postMessage(
+      {
+        type: "ConTx",
+        action: "SET_ACCOUNT",
+        account: account.isConnected ? account.address : null,
+      },
+      "*"
+    );
     connectedAccount = account;
   }
 }, 100);
