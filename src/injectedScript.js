@@ -24,7 +24,7 @@ function createButton() {
   div.textContent = "Connect Wallet";
   div.style.position = "fixed";
   div.style.bottom = "20px";
-  div.style.right = "20px";
+  div.style.left = "20px";
   div.style.padding = "20px";
   div.style.backgroundColor = "#5326ec";
   div.style.borderRadius = "8px";
