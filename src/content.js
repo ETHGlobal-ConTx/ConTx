@@ -141,27 +141,29 @@ async function addCollapsibleDivs() {
 
     // Options to be added - you can customize this array
     const options = [
-      "Donation",
-      "Grant",
-      "Payroll",
-      "Purchase",
-      "Rent",
-      "Equality",
-      "Investment",
-      "Service fee",
-      "Subscription fee",
-      "Supplier fee",
-      "Other",
+      { value: 1, key: "Donation" },
+      { value: 2, key: "Grant" },
+      { value: 3, key: "Payroll" },
+      { value: 4, key: "Purchase" },
+      { value: 5, key: "Rent" },
+      { value: 6, key: "Equality" },
+      { value: 7, key: "Investment" },
+      { value: 8, key: "Service fee" },
+      { value: 9, key: "Subscription fee" },
+      { value: 10, key: "Supplier fee" },
+      { value: 11, key: "Other" },
     ];
 
     // Create and append the options
     for (const optionText of options) {
       const option = document.createElement("option");
-      option.value = optionText;
-      option.textContent = optionText;
+      option.value = optionText.value;
+      option.textContent = optionText.key;
       categorySelect.appendChild(option);
     }
     categoryRow.appendChild(categorySelect);
+
+    categorySelect.value = txInfo[txHash]?.category || 1;
 
     infoWrapper.appendChild(categoryRow);
 
@@ -208,8 +210,8 @@ async function addCollapsibleDivs() {
     saveButton.addEventListener("click", async function () {
       saveButton.textContent = "Saving...";
       saveButton.disabled = true;
-      const note = document.querySelector("#note").value;
-      const category = document.querySelector("#categorySelect").value;
+      const _note = note.value;
+      const _category = categorySelect.value;
       const txHash = row.querySelector("td:nth-child(2)").textContent;
       const fromAdd = row.querySelector("td:nth-child(7)").textContent;
       const txType = row.querySelector("td:nth-child(8)").textContent;
@@ -225,9 +227,9 @@ async function addCollapsibleDivs() {
             },
             body: JSON.stringify({
               txChain: "baseGoerli",
-              category,
+              category: _category,
               txHash,
-              description: note,
+              description: _note,
               sender: fromAdd,
             }), // body data type must match "Content-Type" header
           }
@@ -277,7 +279,7 @@ async function getTransactionHashes() {
     console.log("txHashes", txHashes);
     const res = await fetch(
       `https://dev.serve.giveth.io/ethglobal_hackathon/metadata?tx_hashes=${txHashes.join(
-        "&"
+        ","
       )}`,
       {
         method: "GET", // or 'GET', 'PUT', 'DELETE', etc.
