@@ -30,7 +30,7 @@ function addColumnBeforeFirst() {
 // Run the function to modify the table
 // addColumnBeforeFirst();
 
-function addCollapsibleDivs() {
+async function addCollapsibleDivs() {
   // Select the table and its rows
   const table = document.querySelector("table"); // Adjust the selector as needed
   if (!table) return;
@@ -202,7 +202,7 @@ function addCollapsibleDivs() {
       collapsibleRow.style.display = "none";
     });
 
-    saveButton.addEventListener("click", function () {
+    saveButton.addEventListener("click", async function () {
       saveButton.textContent = "Saving...";
       saveButton.disabled = true;
       const note = document.querySelector("#note").value;
@@ -211,28 +211,32 @@ function addCollapsibleDivs() {
       const fromAdd = row.querySelector("td:nth-child(7)").textContent;
       const txType = row.querySelector("td:nth-child(8)").textContent;
       const toAdd = row.querySelector("td:nth-child(9)").textContent;
-      fetch("https://dev.serve.giveth.io/ethglobal_hackathon/metadata", {
-        method: "POST", // or 'GET', 'PUT', 'DELETE', etc.
-        headers: {
-          "Content-Type": "application/json",
-          // Additional headers
-        },
-        body: JSON.stringify({
-          txChain: "baseGoerli",
-          category,
-          txHash,
-          description: note,
-          sender: fromAdd,
-        }), // body data type must match "Content-Type" header
-      })
-        .then((response) => response.json())
-        .then((data) => console.log(data))
-        .catch((error) => console.error("Error:", error))
-        .finally(() => {
-          saveButton.disabled = false;
-          saveButton.textContent = "Save";
-          collapsibleRow.style.display = "none";
-        });
+      try {
+        const res = await fetch(
+          "https://dev.serve.giveth.io/ethglobal_hackathon/metadata",
+          {
+            method: "POST", // or 'GET', 'PUT', 'DELETE', etc.
+            headers: {
+              "Content-Type": "application/json",
+              // Additional headers
+            },
+            body: JSON.stringify({
+              txChain: "baseGoerli",
+              category,
+              txHash,
+              description: note,
+              sender: fromAdd,
+            }), // body data type must match "Content-Type" header
+          }
+        );
+        const data = await res.json();
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = "Save";
+        collapsibleRow.style.display = "none";
+      }
     });
   });
 }
@@ -261,45 +265,43 @@ function addCollapsibleDivs() {
 //   });
 // }
 
-function getTransactionHashes() {
-  const txElements = document.querySelectorAll(
-    'tr>td:nth-child(2)>a[href^="/tx/"]'
-  );
-  const txHashes = Array.from(txElements).map((el) => el.textContent.trim());
-  console.log("txHashes", txHashes);
-  fetch(
-    `https://dev.serve.giveth.io/ethglobal_hackathon/metadata?tx_hashes=${txHashes.join(
-      "&"
-    )}`,
-    {
-      method: "GET", // or 'GET', 'PUT', 'DELETE', etc.
-      headers: {
-        "Content-Type": "application/json",
-        // Additional headers
-      },
-    }
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      txInfo = data.reduce((acc, item) => {
-        acc[item.txHash] = item;
-        return acc;
-      }, {});
-    })
-    .catch((error) => console.error("Error:", error))
-    .finally(() => {
-      console.log("txInfo", txInfo);
-    });
-
-  // return txHashes;
+async function getTransactionHashes() {
+  try {
+    const txElements = document.querySelectorAll(
+      'tr>td:nth-child(2)>a[href^="/tx/"]'
+    );
+    const txHashes = Array.from(txElements).map((el) => el.textContent.trim());
+    console.log("txHashes", txHashes);
+    const res = await fetch(
+      `https://dev.serve.giveth.io/ethglobal_hackathon/metadata?tx_hashes=${txHashes.join(
+        "&"
+      )}`,
+      {
+        method: "GET", // or 'GET', 'PUT', 'DELETE', etc.
+        headers: {
+          "Content-Type": "application/json",
+          // Additional headers
+        },
+      }
+    );
+    const data = await res.json();
+    console.log(data);
+    txInfo = data.reduce((acc, item) => {
+      acc[item.txHash] = item;
+      return acc;
+    }, {});
+  } catch (error) {
+    console.error("Error:", error);
+  } finally {
+    console.log("txInfo", txInfo);
+  }
 }
 
-function main() {
+async function main() {
   console.log("Hello from content script!");
   injectScript();
-  getTransactionHashes();
-  addCollapsibleDivs();
+  await getTransactionHashes();
+  await addCollapsibleDivs();
 }
 
 window.onload = main;
