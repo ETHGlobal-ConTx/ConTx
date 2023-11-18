@@ -4,6 +4,8 @@ function injectScript() {
   (document.head || document.documentElement).appendChild(script);
 }
 
+let txInfo = {};
+
 // This function adds a new column before the first column in all rows of the table
 function addColumnBeforeFirst() {
   // Select the first table on the page (modify this selector as needed for your use case)
@@ -216,7 +218,7 @@ function addCollapsibleDivs() {
           // Additional headers
         },
         body: JSON.stringify({
-          txChain: "arbitrum",
+          txChain: "baseGoerli",
           category,
           txHash,
           description: note,
@@ -224,7 +226,9 @@ function addCollapsibleDivs() {
         }), // body data type must match "Content-Type" header
       })
         .then((response) => response.json())
-        .then((data) => console.log(data))
+        .then((data) => {
+          console.log(data);
+        })
         .catch((error) => console.error("Error:", error))
         .finally(() => {
           saveButton.disabled = false;
