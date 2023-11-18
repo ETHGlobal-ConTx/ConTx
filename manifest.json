@@ -1,12 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "Web3Modal Extension",
+  "name": "ConTx",
   "version": "1.0",
   "permissions": ["activeTab", "scripting"],
   "content_scripts": [
     {
       "matches": ["*://arbiscan.io/*"],
-      "js": ["dist/content.bundle.js"]
+      "js": ["dist/content.bundle.js"],
+      "css": ["styles/style.css"]
     }
   ],
   "content_security_policy": {
