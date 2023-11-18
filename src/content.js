@@ -5,6 +5,8 @@ function injectScript() {
 }
 
 let txInfo = {};
+let account;
+let signature;
 
 // This function adds a new column before the first column in all rows of the table
 function addColumnBeforeFirst() {
@@ -246,6 +248,25 @@ async function addCollapsibleDivs() {
   });
 }
 
+function initialListeners() {
+  window.addEventListener("message", async (event) => {
+    if (event.data.type !== "ConTx") return;
+    console.log("event", event.data);
+    switch (event.data.action) {
+      case "SET_ACCOUNT":
+        account = event.data.account;
+        break;
+      case "SET_SIGNATURE":
+        signature = event.data.signature;
+        account = event.data.account;
+        break;
+
+      default:
+        break;
+    }
+  });
+}
+
 // Run the function to modify the table
 
 // function addDivToTransactions() {
@@ -304,6 +325,7 @@ async function getTransactionHashes() {
 
 async function main() {
   console.log("Hello from content script!");
+  initialListeners();
   injectScript();
   await getTransactionHashes();
   await addCollapsibleDivs();

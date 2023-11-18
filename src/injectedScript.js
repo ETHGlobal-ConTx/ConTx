@@ -19,7 +19,7 @@ const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 const modal = createWeb3Modal({ wagmiConfig, projectId, chains });
 
 // Function to create and show the button
-function createButton() {
+const createButton = () => {
   const div = document.createElement("div");
   div.textContent = "Connect Wallet";
   div.style.position = "fixed";
@@ -43,11 +43,20 @@ function createButton() {
       message: "gm wagmi frens",
     });
     console.log("signature", signature);
+    window.postMessage(
+      {
+        type: "ConTx",
+        action: "SET_SIGNATURE",
+        signature: signature,
+        account: account.isConnected ? account.address : null,
+      },
+      "*"
+    );
   };
   div.appendChild(button);
 
   document.body.appendChild(div);
-}
+};
 
 window.addEventListener("message", async (event) => {
   if (
