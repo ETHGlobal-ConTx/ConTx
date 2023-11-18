@@ -51,9 +51,12 @@ async function addCollapsibleDivs() {
       return;
     }
 
-    const txHash = row.querySelector("td:nth-child(2)").textContent;
-    const fromAdd = row.querySelector("td:nth-child(7)").textContent;
+    const txHash = row.querySelector("td:nth-child(3)").textContent;
+    const fromAdd = row.querySelector("td:nth-child(8)").textContent;
     const isOwner = fromAdd?.toLowerCase() === account?.toLowerCase();
+    console.log("fromAdd", fromAdd);
+    console.log("account", account);
+    console.log("isOwner", isOwner);
 
     // Create a button to toggle the div visibility
     const toggleButton = document.createElement("div");
@@ -148,36 +151,43 @@ async function addCollapsibleDivs() {
     categoryLabel.style.minWidth = "200px";
     categoryRow.appendChild(categoryLabel);
 
-    // Create a select element
-    const categorySelect = document.createElement("select");
-    categorySelect.id = "categorySelect"; // Set an ID for the select
-    categorySelect.style.width = "100%";
+    if (isOwner) {
+      // Create a select element
+      const categorySelect = document.createElement("select");
+      categorySelect.id = "categorySelect"; // Set an ID for the select
+      categorySelect.style.width = "100%";
 
-    // Options to be added - you can customize this array
-    const options = [
-      { value: 1, key: "Donation" },
-      { value: 2, key: "Grant" },
-      { value: 3, key: "Payroll" },
-      { value: 4, key: "Purchase" },
-      { value: 5, key: "Rent" },
-      { value: 6, key: "Equality" },
-      { value: 7, key: "Investment" },
-      { value: 8, key: "Service fee" },
-      { value: 9, key: "Subscription fee" },
-      { value: 10, key: "Supplier fee" },
-      { value: 11, key: "Other" },
-    ];
+      // Options to be added - you can customize this array
+      const options = [
+        { value: 1, key: "Donation" },
+        { value: 2, key: "Grant" },
+        { value: 3, key: "Payroll" },
+        { value: 4, key: "Purchase" },
+        { value: 5, key: "Rent" },
+        { value: 6, key: "Equality" },
+        { value: 7, key: "Investment" },
+        { value: 8, key: "Service fee" },
+        { value: 9, key: "Subscription fee" },
+        { value: 10, key: "Supplier fee" },
+        { value: 11, key: "Other" },
+      ];
 
-    // Create and append the options
-    for (const optionText of options) {
-      const option = document.createElement("option");
-      option.value = optionText.value;
-      option.textContent = optionText.key;
-      categorySelect.appendChild(option);
+      // Create and append the options
+      for (const optionText of options) {
+        const option = document.createElement("option");
+        option.value = optionText.value;
+        option.textContent = optionText.key;
+        categorySelect.appendChild(option);
+      }
+      categoryRow.appendChild(categorySelect);
+
+      categorySelect.value = txInfo[txHash]?.category || 1;
+    } else {
+      const category = document.createElement("div");
+      category.id = "category";
+      category.textContent = txInfo[txHash]?.category || "";
+      categoryRow.appendChild(category);
     }
-    categoryRow.appendChild(categorySelect);
-
-    categorySelect.value = txInfo[txHash]?.category || 1;
 
     infoWrapper.appendChild(categoryRow);
 
@@ -231,8 +241,8 @@ async function addCollapsibleDivs() {
         saveButton.disabled = true;
         const _note = note.value;
         const _category = categorySelect.value;
-        const txHash = row.querySelector("td:nth-child(2)").textContent;
-        const fromAdd = row.querySelector("td:nth-child(7)").textContent;
+        const txHash = row.querySelector("td:nth-child(3)").textContent;
+        const fromAdd = row.querySelector("td:nth-child(8)").textContent;
         try {
           const res = await fetch(
             "https://dev.serve.giveth.io/ethglobal_hackathon/metadata",
