@@ -341,8 +341,19 @@ async function getTransactionHashes() {
   }
 }
 
+function insertColumnAtStart(tableId) {
+  const table = document.querySelector("table");
+  console.log("table", table);
+  if (!table) return; // Exit if table not found
+
+  for (const row of table.rows) {
+    const newCell = row.insertCell(0); // Inserts a new cell at the first position
+  }
+}
+
 async function main() {
   console.log("Hello from content script!");
+  insertColumnAtStart();
   initialListeners();
   injectScript();
   await getTransactionHashes();
