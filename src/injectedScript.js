@@ -1,9 +1,11 @@
 import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi";
 import { mainnet, arbitrum } from "viem/chains";
-import { getAccount, signMessage } from "@wagmi/core";
+import { connect, getAccount, signMessage } from "@wagmi/core";
 
 // Define constants
 const projectId = "5f94a1e90e8e0c6ed61d1f311422609d";
+
+let connectedAccount;
 
 // Create wagmiConfig
 const metadata = {
@@ -97,6 +99,25 @@ window.addEventListener("message", async (event) => {
     }
   }
 });
+
+setInterval(() => {
+  const account = getAccount();
+  if (connectedAccount) {
+    if (connectedAccount.address !== account.address) {
+      window.postMessage(
+        {
+          type: "ConTx",
+          action: "SET_ACCOUNT",
+          account: account.isConnected ? account.address : null,
+        },
+        "*"
+      );
+      connectedAccount = account;
+    }
+  } else {
+    connectedAccount = account;
+  }
+}, 100);
 
 // Call createButton on script load
 createButton();
