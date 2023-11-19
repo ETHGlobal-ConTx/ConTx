@@ -36,26 +36,6 @@ const createButton = () => {
   div.style.flexDirection = "column";
   div.style.gap = "8px";
   div.innerHTML = "<w3m-button />";
-  const button = document.createElement("button");
-  button.textContent = "Click me";
-  button.onclick = async () => {
-    const account = getAccount();
-    console.log("account", account);
-    const signature = await signMessage({
-      message: "ConTX is awesome!",
-    });
-    window.postMessage(
-      {
-        type: "ConTx",
-        action: "SET_SIGNATURE",
-        signature: signature,
-        account: account.isConnected ? account.address : null,
-      },
-      "*"
-    );
-    console.log("signature", signature);
-  };
-  div.appendChild(button);
 
   document.body.appendChild(div);
 };
