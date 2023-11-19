@@ -419,15 +419,18 @@ async function uploadFile(file) {
   formData.append("file", file);
 
   try {
-    const response = await fetch("https://dev.serve.giveth.io/ipfs", {
-      method: "POST",
-      body: formData,
-    });
+    const response = await fetch(
+      "https://dev.serve.giveth.io/ethglobal_hackathon/ipfs",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-
+    console.log("response", response);
     const result = await response.json();
     console.log("File uploaded successfully", result);
   } catch (error) {
