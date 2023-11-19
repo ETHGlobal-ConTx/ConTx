@@ -242,6 +242,16 @@ async function addCollapsibleDivs() {
       attestationInput.id = "attestationInput";
       attestationInput.textContent = "Create New Attestation";
 
+      attestationInput.addEventListener("click", async (event) => {
+        attestationInput.textContent = "Sending...";
+        const res = await uploadAttestation(txHash, "baseGoerli");
+        if (res) {
+          attestationInput.textContent = "Done";
+        } else {
+          attestationInput.textContent = "Failed, Try Again";
+        }
+      });
+
       attestationRow.appendChild(attestationInput);
     }
 
@@ -441,6 +451,37 @@ async function uploadFile(file) {
     console.error("Error uploading file:", error);
   }
 }
+
+async function uploadAttestation(txHash, attestationChain) {
+  const url = "https://dev.serve.giveth.io/ethglobal_hackathon/attestation";
+  const data = {
+    txHash: txHash,
+    attestationChain: attestationChain,
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log("Success:", result);
+    return result;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+// Example usage:
+// uploadAttestation("0xee9b12edd2259764f7a78331a5360e27e966e0ffd15c47a622ec3b613ec441e7", "baseGoerli");
 
 async function main() {
   console.log("Hello from content script!");
