@@ -219,9 +219,11 @@ async function addCollapsibleDivs() {
         }
       });
     } else {
-      const file = document.createElement("div");
+      const file = document.createElement("a");
       file.id = "file";
-      file.textContent = txInfo[txHash]?.ipfsHash || "";
+      file.textContent = txInfo[txHash]?.ipfsHash ? "Link" : "";
+      file.href = txInfo[txHash]?.ipfsHash || "";
+      file.target = "_blank";
       fileRow.appendChild(file);
     }
     infoWrapper.appendChild(fileRow);
