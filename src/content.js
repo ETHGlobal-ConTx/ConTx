@@ -191,6 +191,38 @@ async function addCollapsibleDivs() {
 
     infoWrapper.appendChild(categoryRow);
 
+    const fileRow = document.createElement("div");
+    fileRow.style.display = "flex";
+    fileRow.style.justifyContent = "space-between";
+    fileRow.style.alignItems = "center";
+
+    const fileLabel = document.createElement("label");
+    fileLabel.textContent = "File";
+    fileLabel.htmlFor = "file";
+    fileLabel.style.minWidth = "200px";
+    fileRow.appendChild(fileLabel);
+
+    if (isOwner) {
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.id = "fileInput";
+      fileInput.style.width = "100%";
+      fileRow.appendChild(fileInput);
+
+      fileInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          uploadFile(file);
+        }
+      });
+    } else {
+      const file = document.createElement("div");
+      file.id = "file";
+      file.textContent = txInfo[txHash]?.file || "";
+      fileRow.appendChild(file);
+    }
+    infoWrapper.appendChild(fileRow);
+
     // Insert the div after the row
     row.parentNode.insertBefore(collapsibleRow, row.nextSibling);
 
@@ -322,7 +354,7 @@ async function initialListeners() {
 async function getTransactionHashes() {
   try {
     const txElements = document.querySelectorAll(
-      'tr>td:nth-child(2)>a[href^="/tx/"]'
+      'tr>td:nth-child(3)>a[href^="/tx/"]'
     );
     const txHashes = Array.from(txElements).map((el) => el.textContent.trim());
     console.log("txHashes", txHashes);
@@ -358,6 +390,27 @@ function insertColumnAtStart(tableId) {
 
   for (const row of table.rows) {
     const newCell = row.insertCell(0); // Inserts a new cell at the first position
+  }
+}
+
+async function uploadFile(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await fetch("https://dev.serve.giveth.io/ipfs", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log("File uploaded successfully", result);
+  } catch (error) {
+    console.error("Error uploading file:", error);
   }
 }
 
