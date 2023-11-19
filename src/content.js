@@ -223,6 +223,27 @@ async function addCollapsibleDivs() {
     }
     infoWrapper.appendChild(fileRow);
 
+    const attestationRow = document.createElement("div");
+    attestationRow.style.display = "flex";
+    attestationRow.style.justifyContent = "space-between";
+    attestationRow.style.alignItems = "center";
+
+    const attestationLabel = document.createElement("label");
+    attestationLabel.textContent = "Attestation";
+    attestationLabel.htmlFor = "attestation";
+    attestationLabel.style.minWidth = "200px";
+    attestationRow.appendChild(attestationLabel);
+
+    if (isOwner) {
+      const attestationInput = document.createElement("button");
+      attestationInput.id = "attestationInput";
+      attestationInput.textContent = "Create New Attestation";
+
+      attestationRow.appendChild(attestationInput);
+    }
+
+    infoWrapper.appendChild(attestationRow);
+
     // Insert the div after the row
     row.parentNode.insertBefore(collapsibleRow, row.nextSibling);
 
