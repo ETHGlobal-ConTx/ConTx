@@ -253,6 +253,13 @@ async function addCollapsibleDivs() {
       });
 
       attestationRow.appendChild(attestationInput);
+    } else {
+      const attestation = document.createElement("div");
+      attestation.id = "attestation";
+      attestation.textContent = txInfo[txHash]?.attestationHash
+        ? "Attestation Active"
+        : "No attestation published";
+      attestationRow.appendChild(attestation);
     }
 
     infoWrapper.appendChild(attestationRow);
