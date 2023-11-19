@@ -209,16 +209,19 @@ async function addCollapsibleDivs() {
       fileInput.style.width = "100%";
       fileRow.appendChild(fileInput);
 
-      fileInput.addEventListener("change", (event) => {
+      fileInput.addEventListener("change", async (event) => {
         const file = event.target.files[0];
         if (file) {
-          uploadFile(file);
+          const _ipfsHash = await uploadFile(file);
+          if (_ipfsHash?.url) {
+            fileInput.setAttribute("data-ipfs-hash", _ipfsHash?.url);
+          }
         }
       });
     } else {
       const file = document.createElement("div");
       file.id = "file";
-      file.textContent = txInfo[txHash]?.file || "";
+      file.textContent = txInfo[txHash]?.ipfsHash || "";
       fileRow.appendChild(file);
     }
     infoWrapper.appendChild(fileRow);
@@ -311,6 +314,7 @@ async function addCollapsibleDivs() {
                 txHash,
                 description: _note,
                 sender: fromAdd,
+                ipfsHash: fileInput?.getAttribute("data-ipfs-hash"),
               }), // body data type must match "Content-Type" header
             }
           );
@@ -430,9 +434,9 @@ async function uploadFile(file) {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    console.log("response", response);
     const result = await response.json();
     console.log("File uploaded successfully", result);
+    return result;
   } catch (error) {
     console.error("Error uploading file:", error);
   }
