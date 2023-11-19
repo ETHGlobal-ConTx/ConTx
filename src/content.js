@@ -151,26 +151,26 @@ async function addCollapsibleDivs() {
     categoryLabel.style.minWidth = "200px";
     categoryRow.appendChild(categoryLabel);
 
+    // Options to be added - you can customize this array
+    const options = [
+      { value: 1, key: "Donation" },
+      { value: 2, key: "Grant" },
+      { value: 3, key: "Payroll" },
+      { value: 4, key: "Purchase" },
+      { value: 5, key: "Rent" },
+      { value: 6, key: "Equality" },
+      { value: 7, key: "Investment" },
+      { value: 8, key: "Service fee" },
+      { value: 9, key: "Subscription fee" },
+      { value: 10, key: "Supplier fee" },
+      { value: 11, key: "Other" },
+    ];
+
     if (isOwner) {
       // Create a select element
       const categorySelect = document.createElement("select");
       categorySelect.id = "categorySelect"; // Set an ID for the select
       categorySelect.style.width = "100%";
-
-      // Options to be added - you can customize this array
-      const options = [
-        { value: 1, key: "Donation" },
-        { value: 2, key: "Grant" },
-        { value: 3, key: "Payroll" },
-        { value: 4, key: "Purchase" },
-        { value: 5, key: "Rent" },
-        { value: 6, key: "Equality" },
-        { value: 7, key: "Investment" },
-        { value: 8, key: "Service fee" },
-        { value: 9, key: "Subscription fee" },
-        { value: 10, key: "Supplier fee" },
-        { value: 11, key: "Other" },
-      ];
 
       // Create and append the options
       for (const optionText of options) {
@@ -185,7 +185,9 @@ async function addCollapsibleDivs() {
     } else {
       const category = document.createElement("div");
       category.id = "category";
-      category.textContent = txInfo[txHash]?.category || "";
+      category.textContent =
+        options.find((option) => option?.value == txInfo[txHash]?.category)
+          ?.key || "";
       categoryRow.appendChild(category);
     }
 
